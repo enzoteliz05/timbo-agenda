@@ -1,0 +1,37 @@
+name: Publicar TIMBÓ Agenda
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Armar el sitio
+        run: |
+          set -e
+          mkdir -p _site/icons
+          cp site/config.js site/sw.js site/manifest.webmanifest _site/
+          base64 -d site/bundle.b64 | tar xz -C _site
+          while read -r nombre datos; do
+            [ -n "$nombre" ] && echo "$datos" | base64 -d > "_site/icons/$nombre"
+          done < site/icons.txt
+          touch _site/.nojekyll
+          ls -la _site _site/icons
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
