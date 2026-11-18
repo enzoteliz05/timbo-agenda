@@ -3,5 +3,5 @@ window.TIMBO_CONFIG = {
   supabaseUrl: "https://cfxqaxukcokafyflwdts.supabase.co",
   supabaseAnonKey: "sb_publishable_4OjQmN_0FXXNfRgT0E53lQ_w-SSJ6Rv",
   centroPorDefecto: "00000000-0000-4000-8000-000000000001",
-  demo: true
+  demo: false
 };
